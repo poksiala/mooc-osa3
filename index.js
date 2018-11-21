@@ -62,6 +62,11 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const person = req.body
+    if (!person.name) {return res.status(400).json({error: 'Missing field "name"'})}
+    if (!person.number) {return res.status(400).json({error: 'Missing field "number"'})}
+    if (persons.find(p => p.name === person.name) !== undefined) {
+        return res.status(400).json({error: 'Name must be unique'})
+    }
     const newId = Math.floor(Math.random() *10000)
     person.id = newId
     persons = persons.concat(person)
