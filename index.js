@@ -5,6 +5,7 @@ const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 3001
 
+app.use(express.static('build'))
 app.use(bodyparser.json())
 app.use(cors())
 morgan.token('body', (req, res) => JSON.stringify(req.body))
@@ -77,7 +78,5 @@ app.post('/api/persons', (req, res) => {
     persons = persons.concat(person)
     res.json(person)
 })
-
-
 
 app.listen(PORT, () => console.log(`servu portissa ${PORT}`))
