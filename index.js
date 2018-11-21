@@ -25,9 +25,17 @@ const persons = [
       },  
 ]
 
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
+app.get('/info', (req, res) => {
+    const str = `puhelinluettelossa on ${persons.length} henkilön tiedot`
+    const ts = new Date()
+    res.send(`<p>${str}</p><p>${ts}</p>`)
 })
+
+app.get('/api/persons', (req, res) => {
+    res.json(persons)
+})
+
+
 
 
 
