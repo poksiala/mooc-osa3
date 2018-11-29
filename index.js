@@ -49,15 +49,14 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const lenBefore = persons.length
-    persons = persons.filter(p => p.id !== id)
-
-    if (persons.length === lenBefore) {
-        res.status(404).end()
-    } else {
-        res.status(204).end()
-    }
+    Person.findByIdAndDelete(req.params.id)
+        .then(person => {
+            if (person) {
+                res.status(204).end()
+            } else {
+                res.status(404).end()
+            }
+        })
 })
 
 app.get('/api/persons/:id', (req, res) => {
