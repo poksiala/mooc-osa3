@@ -2,6 +2,8 @@ const express = require('express')
 const bodyparser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
+
 const app = express()
 const PORT = process.env.PORT || 3001
 
@@ -40,8 +42,18 @@ app.get('/info', (req, res) => {
     res.send(`<p>${str}</p><p>${ts}</p>`)
 })
 
+const formatPerson = (person) => {
+    return {
+        name: person.name,
+        number: person.number,
+        id: person._id
+    }
+}
+
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person
+        .find({})
+        .then(people => {res.json(people.map(formatPerson))})
 })
 
 app.delete('/api/persons/:id', (req, res) => {
