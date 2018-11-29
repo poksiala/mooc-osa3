@@ -42,18 +42,10 @@ app.get('/info', (req, res) => {
     res.send(`<p>${str}</p><p>${ts}</p>`)
 })
 
-const formatPerson = (person) => {
-    return {
-        name: person.name,
-        number: person.number,
-        id: person._id
-    }
-}
-
 app.get('/api/persons', (req, res) => {
     Person
         .find({})
-        .then(people => {res.json(people.map(formatPerson))})
+        .then(people => {res.json(people.map(Person.format))})
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -69,13 +61,14 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(p => p.id === id)
-    if (person) {
-        res.json(person)
-    } else {
-        res.status(404).end()
-    }
+    Person
+        .findById(req.params.id)
+        .then(person => {
+            res.json(Person.format(person))
+        })
+        .catch((err) => {
+            res.status(404).end()
+        })
 })
 
 app.post('/api/persons', (req, res) => {
