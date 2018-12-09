@@ -13,33 +13,19 @@ app.use(cors())
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :body :status :res[content-length] - :response-time ms'))
 
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-      },
-      {
-        "name": "Martti Tienari",
-        "number": "040-123456",
-        "id": 2
-      },
-      {
-        "name": "Arto Järvinen",
-        "number": "040-123456",
-        "id": 3
-      },
-      {
-        "name": "Lea Kutvonen",
-        "number": "040-123456",
-        "id": 4
-      },  
-]
-
 app.get('/info', (req, res) => {
-    const str = `puhelinluettelossa on ${persons.length} henkilön tiedot`
-    const ts = new Date()
-    res.send(`<p>${str}</p><p>${ts}</p>`)
+    Person
+        .count({})
+        .then(count => {
+            const str = `puhelinluettelossa on ${count} henkilön tiedot`
+            const ts = new Date()
+            res.send(`<p>${str}</p><p>${ts}</p>`)
+        })
+        .catch((err) => {
+            console.error(err)
+            res.status(500).end()
+        })
+    
 })
 
 app.get('/api/persons', (req, res) => {
