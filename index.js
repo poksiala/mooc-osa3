@@ -79,4 +79,19 @@ app.post('/api/persons', (req, res) => {
     person.save().then(savedPerson => res.json(Person.format(savedPerson)))
 })
 
+app.put('/api/persons/:id', (req, res) => {
+    if (!req.body.name) {return res.status(400).json({error: 'Missing field "name"'})}
+    if (!req.body.number) {return res.status(400).json({error: 'Missing field "number"'})}
+    
+
+    Person.findByIdAndUpdate(req.params.id, {...req.body}, {new: true})
+        .then((person) => {
+            res.json(Person.format(person))
+        })
+        .catch((err) => {
+            console.error(err)
+            res.status(500).end()
+        })
+})
+
 app.listen(PORT, () => console.log(`servu portissa ${PORT}`))
