@@ -25,7 +25,6 @@ app.get('/info', (req, res) => {
             console.error(err)
             res.status(500).end()
         })
-    
 })
 
 app.get('/api/persons', (req, res) => {
@@ -61,8 +60,18 @@ app.post('/api/persons', (req, res) => {
     if (!req.body.number) {return res.status(400).json({error: 'Missing field "number"'})}
     
     const person = new Person({...req.body})
-
-    person.save().then(savedPerson => res.json(Person.format(savedPerson)))
+    Person.count({name: person.name}, (err, count) => {
+        if (err) {
+            console.error(err)
+            res.status(500).end()
+        } else if (count === 0) {
+            person.save()
+                .then(savedPerson => 
+                    res.json(Person.format(savedPerson)))
+        } else {
+            res.status(400).end()
+        }
+    })    
 })
 
 app.put('/api/persons/:id', (req, res) => {
